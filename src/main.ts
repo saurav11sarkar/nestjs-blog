@@ -4,6 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
 import * as dotenv from 'dotenv';
 import config from './config/config';
+import { ResponseInterceptor } from './utils/interceptors/interceptors.interceptor';
 
 dotenv.config();
 async function bootstrap() {
@@ -19,6 +20,7 @@ async function bootstrap() {
         transform: true,
       }),
     );
+    app.useGlobalInterceptors(new ResponseInterceptor());
     console.log(
       `Server is running on port http://localhost:${config.port ?? 3000}`,
     );

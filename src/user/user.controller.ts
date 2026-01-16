@@ -22,7 +22,9 @@ import { fileUpload } from 'src/helper/fileUploades';
 import type { Request } from 'express';
 import pick from 'src/helper/pick';
 import { AuthGuard } from 'src/auth/auth.guard';
+// import { ResponseInterceptor } from 'src/utils/interceptors/interceptors.interceptor';
 
+// @UseInterceptors(ResponseInterceptor)
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}

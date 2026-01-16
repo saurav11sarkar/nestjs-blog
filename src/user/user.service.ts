@@ -66,7 +66,15 @@ export class UserService {
         role: true,
         createdAt: true,
         updatedAt: true,
-        posts: true,
+        posts: {
+          select: {
+            id: true,
+            title: true,
+            thumbnal: true,
+            tags: true,
+            views: true,
+          },
+        },
       },
     });
 
