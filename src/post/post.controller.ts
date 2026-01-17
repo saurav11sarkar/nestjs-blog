@@ -102,7 +102,13 @@ export class PostController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.postService.remove(+id);
+  @HttpCode(HttpStatus.OK)
+  async deletePost(@Param('id') id: string) {
+    const result = await this.postService.deletePost(id);
+
+    return {
+      message: 'Post deleted successfully',
+      data: result,
+    };
   }
 }

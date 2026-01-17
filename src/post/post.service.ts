@@ -104,22 +104,35 @@ export class PostService {
         total,
         page,
         limit,
+        totalPage: Math.ceil(total / limit),
       },
     };
   }
 
   async getSinglePost(id: string) {
-    const result = await this.prisma.post.findUnique({
-      where: { id: id },
-      include: {
-        author: {
-          select: {
-            name: true,
-            email: true,
-            photo: true,
+    const result = await this.prisma.$transaction(async (tx) => {
+      await tx.post.update({
+        where: { id: id },
+        data: {
+          views: {
+            increment: 1,
           },
         },
-      },
+      });
+
+      const post = await tx.post.findUnique({
+        where: { id: id },
+        include: {
+          author: {
+            select: {
+              name: true,
+              email: true,
+              photo: true,
+            },
+          },
+        },
+      });
+      return post;
     });
 
     if (!result) {
@@ -174,7 +187,19 @@ export class PostService {
     return result;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} post`;
+  async deletePost(id: string) {
+    const post = await this.prisma.post.findUnique({
+      where: { id },
+    });
+
+    if (!post) {
+      throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
+    }
+
+    const result = await this.prisma.post.delete({
+      where: { id },
+    });
+
+    return result;
   }
 }
