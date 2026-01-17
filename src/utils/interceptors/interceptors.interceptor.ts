@@ -22,7 +22,7 @@ export class ResponseInterceptor implements NestInterceptor {
           data: response?.data ?? response,
         };
       }),
-      catchError((err) => {
+      catchError((err: Error) => {
         return throwError(() => err);
       }),
     );
